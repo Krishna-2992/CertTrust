@@ -1,8 +1,9 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useContext } from 'react'
 import { Web3Storage } from 'web3.storage'
 import { contractAddress, contractABI } from './constants'
 import { ethers } from 'ethers'
 import { AiOutlineCopy } from 'react-icons/ai'
+import { Context, useData } from './providers'
 
 function App() {
     const [state, setState] = useState({
@@ -10,6 +11,8 @@ function App() {
         signer: null,
         contract: null,
     })
+    // const { state: s, setProvider } = useContext(Context)
+    // console.log({ state: s })
     const [connected, setConnected] = useState(false)
     const [cid, setCid] = useState('')
     const [signature, setSignature] = useState('')
@@ -150,12 +153,12 @@ function App() {
     //   }
 
     async function setSenderData() {
-      console.log('setsenderData is called...!!')
-      console.log('account: ', account)
+        console.log('setsenderData is called...!!')
+        console.log('account: ', account)
         if (state.contract) {
             const senderTxIds =
                 await state.contract.retrieveSenderSignaturesTxIds(account)
-              console.log(senderTxIds)
+            console.log(senderTxIds)
             setSignedTxData([])
             await senderTxIds.forEach(async (id) => {
                 const transaction = await state.contract.getTransactionById(id)
@@ -186,17 +189,10 @@ function App() {
         document.querySelector('#valid').innerHTML = `<h1>${signerAddress}</h1>`
     }
 
-    async function consoleData() {
-      try {
-        const tx = await state.contract.getTransactionById(0);
-        console.log(tx)
-      } catch (error) {
-        console.error('Error with getTransactionById:', error);
-      }
-    }
 
     return (
         <div className='bg-[#E4E4D0] h-screen'>
+            {/* <button onClick={() => setProvider('name')}>chnge</button> */}
             {/* Navbar */}
             <div className='flex justify-between items-center bg-[#94A684]'>
                 <div className='m-4 font-semibold'>
@@ -212,9 +208,6 @@ function App() {
                     </button>
                 </div>
             </div>
-
-            <button onClick={saveData}>savedata</button>
-            <button onClick={consoleData}>consoledata</button>
 
             {connected ? (
                 <div>
@@ -251,24 +244,17 @@ function App() {
                     {page === 'sign' && (
                         <div className='flex flex-col md:flex-row w-screen '>
                             <div className='md:w-1/2 font-semibold p-4'>
-                                Lorem ipsum dolor sit amet consectetur
-                                adipisicing elit. Ex, nulla explicabo numquam
-                                enim aperiam illum voluptatum unde? Blanditiis
-                                error, labore exercitationem vero odio aliquid
-                                temporibus dignissimos. Ipsum dolore minima
-                                similique? Sint perferendis laudantium doloribus
-                                quaerat dolor, eaque officia expedita natus quas
-                                culpa quod atque facere exercitationem delectus
-                                repellendus unde eum magnam saepe quos quisquam
-                                odit blanditiis reprehenderit. Quia mollitia
-                                recusandae dolor officiis natus quis architecto
-                                illo est nulla ratione cum ut, consequuntur,
-                                esse dolore molestias veritatis aliquid totam
-                                nesciunt temporibus sequi saepe suscipit. Omnis
-                                exercitationem quo tenetur sint nisi cum
-                                corrupti, temporibus, dolore necessitatibus
-                                delectus aspernatur, excepturi facere? Deleniti,
-                                doloremque.
+                                
+                                Certificate counterfeiting has become a very common practice in today's world but to which organizations face a lot of difficulties to differentiate between authentic and counterfeit one. <br />
+
+                                steps involved: 
+                                <ol style={{marginRight: 10}}>
+                                    <li>upload cretificate to the IPFS</li>
+                                    <li>sign the generated CID using the organization's private key</li>
+                                    <li>store the cid and signature in the blockchain along with the receiver's address and the message.</li>
+                                </ol>
+
+                                
                             </div>
                             <div className='flex flex-col md:w-1/2 rounded-lg border-white border-4 justify-self-center items-center'>
                                 {cid ? (
@@ -465,7 +451,9 @@ function App() {
                                                 timestamp:{' '}
                                                 {tx.timestamp.toString()}
                                             </div>
-                                            <div className='indie'>signer: {tx.sender}</div>
+                                            <div className='indie'>
+                                                signer: {tx.sender}
+                                            </div>
                                             <div className='flex items-center'>
                                                 <div className='indie'>
                                                     signature:{' '}
@@ -485,7 +473,9 @@ function App() {
                                                     <AiOutlineCopy />
                                                 </div>
                                             </div>
-                                            <div className='indie'>message: {tx.message}</div>
+                                            <div className='indie'>
+                                                message: {tx.message}
+                                            </div>
                                         </div>
                                     )
                                 })}
