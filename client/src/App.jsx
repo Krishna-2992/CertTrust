@@ -28,6 +28,11 @@ function App() {
                 const accounts = await window.ethereum.request({
                     method: 'eth_requestAccounts',
                 })
+                // switching to correct network
+                await window.ethereum.request({
+                    method: 'wallet_switchEthereumChain',
+                    params: [{ chainId: '0xaa36a7' }], // chainId must be in hexadecimal
+                })
                 setAccount(accounts[0])
 
                 const provider = new ethers.providers.Web3Provider(
@@ -149,6 +154,7 @@ function App() {
         console.log('setsenderData is called...!!')
         console.log('account: ', account)
         if (state.contract) {
+            console.log('contracttt is: ', state.contract)
             const senderTxIds =
                 await state.contract.retrieveSenderSignaturesTxIds(account)
             console.log(senderTxIds)
@@ -182,14 +188,13 @@ function App() {
         document.querySelector('#valid').innerHTML = `<h1>${signerAddress}</h1>`
     }
 
-
     return (
         <div className='bg-[#E4E4D0] h-screen'>
             {/* <button onClick={() => setProvider('name')}>chnge</button> */}
             {/* Navbar */}
             <div className='flex justify-between items-center bg-[#94A684]'>
                 <div className='m-4 font-semibold'>
-                     Certificate verification dApp
+                    Certificate verification dApp
                 </div>
                 <div className='mx-8 my-2'>
                     <button
@@ -237,17 +242,24 @@ function App() {
                     {page === 'sign' && (
                         <div className='flex flex-col md:flex-row w-screen '>
                             <div className='md:w-1/2 font-semibold p-4'>
-                                
-                                Certificate counterfeiting has become a very common practice in today's world but to which organizations face a lot of difficulties to differentiate between authentic and counterfeit one. <br />
-
-                                steps involved: 
-                                <ol style={{marginRight: 10}}>
+                                Certificate counterfeiting has become a very
+                                common practice in today's world but to which
+                                organizations face a lot of difficulties to
+                                differentiate between authentic and counterfeit
+                                one. <br />
+                                steps involved:
+                                <ol style={{ marginRight: 10 }}>
                                     <li>upload cretificate to the IPFS</li>
-                                    <li>sign the generated CID using the organization's private key</li>
-                                    <li>store the cid and signature in the blockchain along with the receiver's address and the message.</li>
+                                    <li>
+                                        sign the generated CID using the
+                                        organization's private key
+                                    </li>
+                                    <li>
+                                        store the cid and signature in the
+                                        blockchain along with the receiver's
+                                        address and the message.
+                                    </li>
                                 </ol>
-
-                                
                             </div>
                             <div className='flex flex-col md:w-1/2 rounded-lg border-white border-4 justify-self-center items-center'>
                                 {cid ? (
@@ -441,7 +453,11 @@ function App() {
                                                     <AiOutlineCopy />
                                                 </div>
                                             </div>
-                                            <a href={`https://dweb.link/ipfs/${tx.cid}`}><div>cid: {tx.cid}</div></a>
+                                            <a
+                                                href={`https://dweb.link/ipfs/${tx.cid}`}
+                                            >
+                                                <div>cid: {tx.cid}</div>
+                                            </a>
                                             <div className='indie'>
                                                 message: {tx.message}
                                             </div>
@@ -482,7 +498,11 @@ function App() {
                                                     <AiOutlineCopy />
                                                 </div>
                                             </div>
-                                            <a href={`https://dweb.link/ipfs/${tx.cid}`}><div>cid: {tx.cid}</div></a>
+                                            <a
+                                                href={`https://dweb.link/ipfs/${tx.cid}`}
+                                            >
+                                                <div>cid: {tx.cid}</div>
+                                            </a>
                                             <div className='indie'>
                                                 message: {tx.message}
                                             </div>
