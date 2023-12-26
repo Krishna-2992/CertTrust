@@ -119,13 +119,6 @@ function App() {
 
         console.log('sendign transactoin...')
 
-        // const saved = await state.contract.storeSignature(
-        //     account,
-        //     "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-        //     "bafybeiglbadhcqxzt5bledxbnvyxgmaxan2bwtv3idxd5xdbngahb4t4na",
-        //     "0x675c42f76f12db63b1cda31e3ddc66a148ad7f64cf09a31c72e0af865726f2ea5c2bbc8e4bf8e30ca979f5a6bdeaf14cacd4c612af16425172afe6d329f7562f1c",
-        //     "a message"
-        // )
         const saved = await state.contract.storeSignature(
             account,
             receiver,
@@ -196,7 +189,7 @@ function App() {
             {/* Navbar */}
             <div className='flex justify-between items-center bg-[#94A684]'>
                 <div className='m-4 font-semibold'>
-                    Krishna's signature verification dApp
+                     Certificate verification dApp
                 </div>
                 <div className='mx-8 my-2'>
                     <button
@@ -415,27 +408,43 @@ function App() {
 
                     {page === 'data' && (
                         <div className='flex w-full justify-around'>
-                            <div className='border border-black w-full m-4 pt-0 p-2'>
-                                <div className='underline underline-offset-2 mb-2'>
+                            <div className='border border-black w-full m-4 pt-0 p-2 rounded-2xl  font-semibold'>
+                                <div className='underline underline-offset-2 mb-2 indie'>
                                     messages you signed:
                                 </div>
                                 {signedTxData.map((tx) => {
                                     return (
-                                        <div>
-                                            <div>
+                                        <div className='border border-black mx-2 rounded-2xl p-2'>
+                                            <div className='indie'>
                                                 timestamp:{' '}
                                                 {tx.timestamp.toString()}
                                             </div>
-                                            <div>signer: {tx.receiver}</div>
-                                            <div>
-                                                signature:{' '}
-                                                {`${tx.signature.slice(
-                                                    0,
-                                                    40
-                                                )}...`}
+                                            <div className='indie'>
+                                                receiver: {tx.sender}
                                             </div>
-                                            <div>message: {tx.message}</div>
-                                            <br />
+                                            <div className='flex items-center'>
+                                                <div className='indie'>
+                                                    signature:{' '}
+                                                    {`${tx.signature.slice(
+                                                        0,
+                                                        40
+                                                    )}...`}
+                                                </div>
+                                                <div
+                                                    onClick={async () => {
+                                                        await navigator.clipboard.writeText(
+                                                            tx.signature
+                                                        )
+                                                    }}
+                                                    className='cursor-pointer indie'
+                                                >
+                                                    <AiOutlineCopy />
+                                                </div>
+                                            </div>
+                                            <a href={`https://dweb.link/ipfs/${tx.cid}`}><div>cid: {tx.cid}</div></a>
+                                            <div className='indie'>
+                                                message: {tx.message}
+                                            </div>
                                         </div>
                                     )
                                 })}
@@ -473,6 +482,7 @@ function App() {
                                                     <AiOutlineCopy />
                                                 </div>
                                             </div>
+                                            <a href={`https://dweb.link/ipfs/${tx.cid}`}><div>cid: {tx.cid}</div></a>
                                             <div className='indie'>
                                                 message: {tx.message}
                                             </div>
@@ -493,9 +503,3 @@ function App() {
 }
 
 export default App
-
-// bafybeiet634wewlvid6cuhjxydtr5jsqsl6rcwh2lqgjzpynypn3tfrh6u
-// 0x7fe0889abd566e036bd58563e8322450a76684f6376c513bec2a962d1b37ec707eec6af10936c2847f0d58a2de051242d2c153b2ee3366c6fef7a60a9da16eaa1b
-
-// bafybeibqwwesxreb75iawd3guwjtolqsgp2ckryln5imzwzq4xzpsebmzi
-// 0x08c6c4783b39ab260e4881fb67b27ffbbcc3162a982f6f2780dedbec2e4493c0243c91379deb77acf4bb14bb8fe2b7abe5e2e313d2544ac93d25464a06586eef1b
