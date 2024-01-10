@@ -1,9 +1,9 @@
 import { useState, useEffect, useContext } from 'react'
-import { Web3Storage } from 'web3.storage'
 import { contractAddress, contractABI } from './constants'
 import { ethers } from 'ethers'
 import { AiOutlineCopy } from 'react-icons/ai'
-import { Context, useData } from './providers'
+import axios from 'axios'
+import FormData from 'form-data'
 
 function App() {
     const [state, setState] = useState({
@@ -58,17 +58,46 @@ function App() {
     }
 
     async function uploadImg() {
+        console.log('upppload image calllled')
+
+
+        const formData = new FormData()
         const file = document.getElementById('file').files[0]
-        const files = []
-        files.push(file)
-        console.log(`Uploading ${files.length} files`)
-        const token =
-            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDNjOUYwZDA0MTdDMTI5MDcxYjlDMmFGNDc2MDhCNTk3M0YyRTI0N0YiLCJpc3MiOiJ3ZWIzLXN0b3JhZ2UiLCJpYXQiOjE2OTM2NTc2MjcxMTcsIm5hbWUiOiJzaWduYXR1cmVWZXJpZmljYXRpb24ifQ.Vmy5HOXDCNRpBcmGLZwbCzpGpNE4qrFf1UE_43lk5tY'
-        const storage = new Web3Storage({ token })
-        const cid = await storage.put(files)
-        setCid(cid)
+
+        console.log('file is : ', file)
+        formData.append('file', file)
+        console.log(formData)
+
+        const response = await axios.post(
+            "https://api.pinata.cloud/pinning/pinFileToIPFS",
+            formData,
+            {
+              headers: {
+                "Content-Type": "multipart/form-data",
+                pinata_api_key: import.meta.env.VITE_PINATA_API_KEY,
+                pinata_secret_api_key: import.meta.env.VITE_PINATA_SECRET_API_KEY,
+              },
+            }
+          );
+          console.log(
+            'ipfs hash generated!'
+          )
+          console.log(response.data.IpfsHash)
+          setCid(response.data.IpfsHash)
         console.log('Content added with CID:', cid)
     }
+    // async function uploadImg() {
+    //     const file = document.getElementById('file').files[0]
+    //     const files = []
+    //     files.push(file)
+    //     console.log(`Uploading ${files.length} files`)
+    //     const token =
+    //         'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDNjOUYwZDA0MTdDMTI5MDcxYjlDMmFGNDc2MDhCNTk3M0YyRTI0N0YiLCJpc3MiOiJ3ZWIzLXN0b3JhZ2UiLCJpYXQiOjE2OTM2NTc2MjcxMTcsIm5hbWUiOiJzaWduYXR1cmVWZXJpZmljYXRpb24ifQ.Vmy5HOXDCNRpBcmGLZwbCzpGpNE4qrFf1UE_43lk5tY'
+    //     const storage = new Web3Storage({ token })
+    //     const cid = await storage.put(files)
+    //     setCid(cid)
+    //     console.log('Content added with CID:', cid)
+    // }
 
     // function getEthSignedMessageHash(_messageHash) {
     //     const prefix = '\x19Ethereum Signed Message:\n32'
