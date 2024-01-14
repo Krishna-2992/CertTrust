@@ -2,6 +2,7 @@ import { useState, useEffect, useContext } from 'react'
 import { contractAddress, contractABI } from './constants'
 import { ethers } from 'ethers'
 import { AiOutlineCopy } from 'react-icons/ai'
+import { IoOpenOutline } from 'react-icons/io5'
 import axios from 'axios'
 import FormData from 'form-data'
 
@@ -60,7 +61,6 @@ function App() {
     async function uploadImg() {
         console.log('upppload image calllled')
 
-
         const formData = new FormData()
         const file = document.getElementById('file').files[0]
 
@@ -71,52 +71,27 @@ function App() {
         console.log('new pinata ipfs added')
 
         const response = await axios.post(
-            "https://api.pinata.cloud/pinning/pinFileToIPFS",
+            'https://api.pinata.cloud/pinning/pinFileToIPFS',
             formData,
             {
-              headers: {
-                "Content-Type": "multipart/form-data",
-                pinata_api_key: import.meta.env.VITE_PINATA_API_KEY,
-                pinata_secret_api_key: import.meta.env.VITE_PINATA_SECRET_API_KEY,
-              },
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                    pinata_api_key: import.meta.env.VITE_PINATA_API_KEY,
+                    pinata_secret_api_key: import.meta.env
+                        .VITE_PINATA_SECRET_API_KEY,
+                },
             }
-          );
-          console.log(
-            'ipfs hash generated!'
-          )
-          console.log(response.data.IpfsHash)
-          setCid(response.data.IpfsHash)
+        )
+        console.log('ipfs hash generated!')
+        console.log(response.data.IpfsHash)
+        setCid(response.data.IpfsHash)
         console.log('Content added with CID:', cid)
     }
-    // async function uploadImg() {
-    //     const file = document.getElementById('file').files[0]
-    //     const files = []
-    //     files.push(file)
-    //     console.log(`Uploading ${files.length} files`)
-    //     const token =
-    //         'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDNjOUYwZDA0MTdDMTI5MDcxYjlDMmFGNDc2MDhCNTk3M0YyRTI0N0YiLCJpc3MiOiJ3ZWIzLXN0b3JhZ2UiLCJpYXQiOjE2OTM2NTc2MjcxMTcsIm5hbWUiOiJzaWduYXR1cmVWZXJpZmljYXRpb24ifQ.Vmy5HOXDCNRpBcmGLZwbCzpGpNE4qrFf1UE_43lk5tY'
-    //     const storage = new Web3Storage({ token })
-    //     const cid = await storage.put(files)
-    //     setCid(cid)
-    //     console.log('Content added with CID:', cid)
-    // }
-
-    // function getEthSignedMessageHash(_messageHash) {
-    //     const prefix = '\x19Ethereum Signed Message:\n32'
-    //     const packedMessage = ethers.utils.solidityPack(
-    //         ['string', 'bytes32'],
-    //         [prefix, _messageHash]
-    //     )
-    //     const hash = ethers.utils.keccak256(packedMessage)
-    //     // console.log('hash', hash)
-    //     return hash
-    // }
 
     async function getSignature() {
         const packedMessage = ethers.utils.solidityPack(['string'], [cid])
+        console.log('packed msg: ', packedMessage)
         const hash = ethers.utils.keccak256(packedMessage)
-
-        // console.log('ethSignedHash', getEthSignedMessageHash(hash))
 
         const res = await window.ethereum.request({
             method: 'personal_sign',
@@ -484,11 +459,12 @@ function App() {
                                                     <AiOutlineCopy />
                                                 </div>
                                             </div>
-                                            <a
-                                                href={`https://dweb.link/ipfs/${tx.cid}`}
-                                            >
+                                            <div className='flex items-center gap-2'>
                                                 <div>cid: {tx.cid}</div>
-                                            </a>
+                                                <a href={`ipfs://${tx.cid}/`} target="_blank" rel="noopener noreferrer">
+                                                    <IoOpenOutline />
+                                                </a>
+                                            </div>
                                             <div className='indie'>
                                                 message: {tx.message}
                                             </div>
@@ -529,11 +505,12 @@ function App() {
                                                     <AiOutlineCopy />
                                                 </div>
                                             </div>
-                                            <a
-                                                href={`https://dweb.link/ipfs/${tx.cid}`}
-                                            >
+                                            <div className='flex items-center gap-2'>
                                                 <div>cid: {tx.cid}</div>
-                                            </a>
+                                                <a href={`ipfs://${tx.cid}/`} target="_blank" rel="noopener noreferrer">
+                                                    <IoOpenOutline />
+                                                </a>
+                                            </div>
                                             <div className='indie'>
                                                 message: {tx.message}
                                             </div>

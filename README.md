@@ -1,13 +1,13 @@
-# Sample Hardhat Project
+# CertTrust 
 
-This project demonstrates a basic Hardhat use case. It comes with a sample contract, a test for that contract, and a script that deploys that contract.
+This is a tool to identify the authenticity of a certificate
 
-Try running some of the following tasks:
+How it works:
+- organization signs the certificate and saves it to the blockchain alongwith writing the address of the receiver so that the receiver could also access it.
+- anyone can check weather the certificate has been provided by the organization by entering the cid, signature and the address of the organization. This will result in either true/false.
 
-```shell
-npx hardhat help
-npx hardhat test
-REPORT_GAS=true npx hardhat test
-npx hardhat node
-npx hardhat run scripts/deploy.js
-```
+![project-architecture](./media/signing.png)
+
+![sign](./media/sign.png)
+![Verifying](./media/verification.png)
+![data](./media/data.png)
