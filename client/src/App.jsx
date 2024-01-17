@@ -3,6 +3,7 @@ import { contractAddress, contractABI } from './constants'
 import { ethers } from 'ethers'
 import { AiOutlineCopy } from 'react-icons/ai'
 import { IoOpenOutline } from 'react-icons/io5'
+
 import axios from 'axios'
 import FormData from 'form-data'
 
@@ -88,7 +89,7 @@ function App() {
         console.log('new pinata ipfs added')
         toast('Uploading...please wait', {
             position: "top-right",
-            autoClose: 5000,
+            autoClose: 7000,
             hideProgressBar: false,
             closeOnClick: true,
             pauseOnHover: true,
@@ -172,6 +173,17 @@ function App() {
 
         console.log('sendign transactoin...')
 
+        toast.info('Transaction submitted to the blockchain!', {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+            });
+
         const saved = await state.contract.storeSignature(
             account,
             receiver,
@@ -180,29 +192,24 @@ function App() {
             message
         )
         await saved.wait()
+        toast.success('data successfully stored in blockchain! Check the data section', {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+            });
         console.log('saveData ', saved)
     }
-
-    // async function setSenderData() {
-    //     if (state.contract) {
-    //       const senderTxIds = await state.contract.retrieveSenderSignaturesTxIds(account);
-    //       console.log('ids are', senderTxIds);
-
-    //       const transactions = await Promise.all(senderTxIds.map(async (id) => {
-    //         console.log('in🙃🙃');
-    //         const transaction = await state.contract.getTransactionById(id);
-    //         return transaction;
-    //       }));
-
-    //       setSignedTxData(transactions);
-    //     }
-    //   }
 
     async function setSenderData() {
         console.log('setsenderData is called...!!')
         console.log('account: ', account)
         if (state.contract) {
-            console.log('contracttt is: ', state.contract)
+            console.log('contract is: ', state.contract)
             const senderTxIds =
                 await state.contract.retrieveSenderSignaturesTxIds(account)
             console.log(senderTxIds)
@@ -371,7 +378,7 @@ function App() {
                                     <input
                                         type='text'
                                         className='border-black border m-2 p-2 rounded-md'
-                                        placeholder='receiver address'
+                                        placeholder='receiver address(0xed7852...)'
                                         id='receiver'
                                     />
                                 </div>
@@ -379,7 +386,7 @@ function App() {
                                     <input
                                         type='text'
                                         className='border-black border m-2 p-2 rounded-md'
-                                        placeholder='message'
+                                        placeholder='certificate data'
                                         id='message'
                                     />
                                 </div>
